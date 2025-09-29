@@ -1,4 +1,4 @@
-module.exports.build = function (dir) {
+module.exports.build = async function (dir) {
   const rimraf = require("rimraf"),
     util = require("../util/util.js"),
     path = require("path"),
@@ -68,7 +68,7 @@ module.exports.build = function (dir) {
           .split(/\r?\n/)
           .map(line => line.split("="))
           .filter(entry => i18nKeys.includes(entry[0]))
-          .forEach(entry => entries[entry[0]] = entry[1]);
+          .forEach(entry => entries[entry[0]] = util.i18n.parseValue(entry[1]));
         return {
           locale: file.slice("i18n_".length, file.length - ".properties".length).replace(/_/gi, "-"),
           textDictionary: entries
@@ -502,12 +502,12 @@ module.exports.build = function (dir) {
   util.json.toFile(path.join(mainPackagePath, "manifest.json"), man);
 
   console.log("Creating package.zip ");
-  util.zip.folder(path.join(root, "package.zip"), path.join(root, "package"));
+  await util.zip.folder(path.join(root, "package.zip"), path.join(root, "package"));
 
   if (businessHubBuild) {
     createPackageJSON(root, businessHubPath);
     util.log.fancy("Creating businesshub.zip");
-    util.zip.folder(path.join(root, "businesshub.zip"), path.join(root, "businesshub"));
+    await util.zip.folder(path.join(root, "businesshub.zip"), path.join(root, "businesshub"));
     rimraf.sync(path.join(root, "businesshub"));
   }
   util.log.fancy("Build finished successful.");

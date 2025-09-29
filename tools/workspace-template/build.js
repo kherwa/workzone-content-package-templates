@@ -59,7 +59,7 @@ module.exports.build = async function (dir) {
   util.i18n.process(path.join(dist, "manifest.json"));
 
   console.log(" - Zip content to " + name + ".zip");
-  util.zip.folder(out, dist);
+  await util.zip.folder(out, dist);
 
   util.log.fancy("Building Workspace Template Package finished successful");
 }

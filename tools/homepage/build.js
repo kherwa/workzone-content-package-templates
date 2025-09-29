@@ -1,4 +1,4 @@
-module.exports.build = function (dir) {
+module.exports.build = async function (dir) {
   var path = require("path"),
     util = require("../util/util.js"),
     rimraf = require("rimraf"),
@@ -22,7 +22,7 @@ module.exports.build = function (dir) {
   util.i18n.process(path.join(dist, "manifest.json"));
 
   console.log(" - Zip content to " + name + ".zip");
-  util.zip.folder(out, dist);
+  await util.zip.folder(out, dist);
 
   util.log.fancy("Building Home Page Package finished successful");
 }

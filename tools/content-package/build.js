@@ -1,10 +1,10 @@
 module.exports.build = async function (dir) {
-  const rimraf = require("rimraf"),
+  const { rimrafSync } = require("rimraf"),
     util = require("../util/util.js"),
     path = require("path"),
     fs = require("fs-extra"),
     handlebars = require("handlebars"),
-    propertiesReader = require("properties-reader"),
+    { propertiesReader } = require("properties-reader"),
     businessHubBuild = process.argv.slice(2)[0] === "-b";
 
   var validTypes = ["card", "workflow", "workspace-template", "workspace", "homepage", "workpage", "space", "role", "businessapp", "urltemplate", "catalog"];
@@ -103,9 +103,9 @@ module.exports.build = async function (dir) {
         console.log("No translation file found: " + sourceDir + manifest["sap.app"].i18n);
         return false;
       }
-      var translations = propertiesReader(i18n),
+      var translations = propertiesReader({ sourceFile: i18n }),
         template = handlebars.compile(JSON.stringify(manifest)),
-        data = translations.getAllProperties(),
+        data = Object.fromEntries(translations.entries()),
         resultJSON = JSON.parse(template(data));
       for (var n in mapping) {
         packageJSON[mapping[n]] = getJSONPathValue(n, resultJSON);
@@ -391,10 +391,10 @@ module.exports.build = async function (dir) {
 
 
   console.log("Clear previous results...")
-  rimraf.sync(mainPackagePath);
-  rimraf.sync(businessHubPath);
-  rimraf.sync(path.join(root, "package.zip"));
-  rimraf.sync(path.join(root, "businesshub.zip"));
+  rimrafSync(mainPackagePath);
+  rimrafSync(businessHubPath);
+  rimrafSync(path.join(root, "package.zip"));
+  rimrafSync(path.join(root, "businesshub.zip"));
   console.log("Done");
 
   console.log("Create folders...")
@@ -508,7 +508,7 @@ module.exports.build = async function (dir) {
     createPackageJSON(root, businessHubPath);
     util.log.fancy("Creating businesshub.zip");
     await util.zip.folder(path.join(root, "businesshub.zip"), path.join(root, "businesshub"));
-    rimraf.sync(path.join(root, "businesshub"));
+    rimrafSync(path.join(root, "businesshub"));
   }
   util.log.fancy("Build finished successful.");
 

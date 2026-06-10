@@ -4,7 +4,7 @@ module.exports.validate = function (dir) {
 		util = require("../util/util.js"),
 		validation = require("../util/validation.js").validation,
 		handlebars = require("handlebars"),
-		propertiesReader = require("properties-reader"),
+		{ propertiesReader } = require("properties-reader"),
 		{ template } = require("handlebars"),
 		packageDir = path.join(dir, "package"),
 		packageJson = util.json.fromFile(path.join(dir, "package.json")),
@@ -211,7 +211,7 @@ module.exports.validate = function (dir) {
 				var aMatches = JSON.stringify(json).match(/\{\{([^{}]*)\}\}/g);
 				if (validation.hasStringEntry(json["sap.package"], "i18n", 15, "i18n", "properties")) {
 					try {
-						var i18n = propertiesReader(path.join(packageDir, json["sap.package"].i18n));
+						var i18n = propertiesReader({ sourceFile: path.join(packageDir, json["sap.package"].i18n) });
 						this.checklist = [],
 							result = true,
 							used = [];
@@ -226,7 +226,7 @@ module.exports.validate = function (dir) {
 								result = false;
 							}
 						}
-						var all = i18n.getAllProperties();
+						var all = Object.fromEntries(i18n.entries());
 						for (var n in all) {
 							if (used.indexOf(n) === -1) {
 								//this.checklist.push({ error: "hint", message: n + " defined in i18n but never used", key: n });

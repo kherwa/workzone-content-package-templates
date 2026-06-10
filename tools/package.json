@@ -14,13 +14,13 @@
   "author": "SAP SE",
   "license": "ISC",
   "dependencies": {
-    "@ui5/cli": "4.0.14",
-    "archiver": "^7.0.1",
-    "fs-extra": "10.1.0",
-    "glob": "10.4.5",
-    "handlebars": "4.7.7",
-    "jszip": "3.8.0",
-    "properties-reader": ">=2.2.0",
-    "rimraf": "6.0.1"
+    "@ui5/cli": "4.0.55",
+    "archiver": "8.0.0",
+    "fs-extra": "11.3.5",
+    "glob": "13.0.6",
+    "handlebars": "4.7.9",
+    "jszip": "3.10.1",
+    "properties-reader": "3.0.1",
+    "rimraf": "5.0.10"
   }
 }

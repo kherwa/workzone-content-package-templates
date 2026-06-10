@@ -29,7 +29,7 @@ function addFolderToZip(zip, fsPath, aFilters, prefix) {
 }
 module.exports.build = async function (dir) {
   var util = require("../util/util.js"),
-    rimraf = require("rimraf"),
+    { rimrafSync } = require("rimraf"),
     root = path.join(dir, util.relativeDir(dir)),
 		packagejson = util.json.fromFile(path.join(root, "package.json")),
 		name = packagejson.name,
@@ -41,7 +41,7 @@ module.exports.build = async function (dir) {
   util.log.fancy("Building Workspace Template Package");
   console.log(" - Clean files and folders");
 
-  rimraf.sync(dist);
+  rimrafSync(dist);
   fs.removeSync(out);
 
   console.log(" - Create dist folder and content");
@@ -54,7 +54,7 @@ module.exports.build = async function (dir) {
     var zipBuffer = await zip.generateAsync({type: "nodebuffer"});
     fs.writeFileSync(path.join(dist, "workspace-template.zip"), zipBuffer);
 
-    rimraf.sync(path.join(dist, "template"));
+    rimrafSync(path.join(dist, "template"));
   }
   util.i18n.process(path.join(dist, "manifest.json"));
 

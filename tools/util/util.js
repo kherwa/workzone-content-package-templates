@@ -1,7 +1,6 @@
 const fs = require("fs-extra"),
   path = require("path"),
   { spawnSync } = require("child_process"),
-  archiver = require("archiver"),
   glob = require("glob");
 const { cwd } = require("process");
 
@@ -29,10 +28,11 @@ var util = {
     },
   },
   zip: {
-    folder: function (targetfile, sourcefolder, folder = "*") {
-      return new Promise(async (resolve, reject) => {
+    folder: async function (targetfile, sourcefolder, folder = "*") {
+      const { ZipArchive } = await import("archiver");
+      return new Promise((resolve, reject) => {
         const output = fs.createWriteStream(targetfile);
-        const archive = archiver("zip", {
+        const archive = new ZipArchive({
           zlib: { level: 9 }, // Sets the compression level.
         });
         output.on("close", () => {
@@ -53,9 +53,8 @@ var util = {
           strict: true
         }
 
-        try {
-          const files = await glob.glob(folder, globOpts);
-          if (!files.length) return reject(new Error("No files matched"));
+        glob.glob(folder, globOpts).then((files) => {
+          if (!files.length) throw new Error("No files matched");
 
           for (const file of files) {
             const fullPath = path.join(sourcefolder, file);
@@ -67,10 +66,8 @@ var util = {
               archive.directory(fullPath, file);
             }
           }
-          archive.finalize();
-        } catch (err) {
-          reject(err);
-        }
+          return archive.finalize();
+        }).catch(reject);
       });
     },
   },

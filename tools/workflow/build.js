@@ -1,7 +1,7 @@
 module.exports.build = async function (dir) {
 	const path = require("path"),
 		util = require("../util/util.js"),
-		rimraf = require("rimraf"),
+		{ rimrafSync } = require("rimraf"),
 		fs = require("fs-extra"),
 		root = path.join(dir, util.relativeDir(dir)),
 		packagejson = util.json.fromFile(path.join(root, "package.json")),
@@ -14,7 +14,7 @@ module.exports.build = async function (dir) {
 	util.log.fancy("Building Workflow Package...");
 	console.log(" - Clean files and folders");
 
-	rimraf.sync(dist);
+	rimrafSync(dist);
 	fs.removeSync(out);
 
 	console.log(" - Create dist folder with sources");

@@ -5,7 +5,7 @@ module.exports.pull = function (dir, local) {//load content.json
     contentConfig will be /Top/content.json
     contentDir will be /Top/__contents
   */
-  const rimraf = require("rimraf"),
+  const { rimrafSync } = require("rimraf"),
     path = require("path"),
     util = require("../util/util.js"),
     fs = require("fs-extra"),
@@ -17,7 +17,7 @@ module.exports.pull = function (dir, local) {//load content.json
 
   try {
     console.log("Clean __contents dir");
-    rimraf.sync(contentsDir);
+    rimrafSync(contentsDir);
 
     fs.mkdirSync(contentsDir);
 
@@ -106,10 +106,10 @@ module.exports.pull = function (dir, local) {//load content.json
           tmpText = fs.readFileSync(path.join(__dirname, "../resources/card-ui5.yaml.template"), 'utf-8').replace("{{CardName}}", cardName);
           fs.writeFileSync(path.join(baseDir, "build", "ui5.yaml"), tmpText);
   
-          rimraf.sync(path.join(baseDir, "build", "src", ".card"));
-          rimraf.sync(path.join(baseDir, "build", "src", ".wst"));
-          rimraf.sync(path.join(baseDir, "build", "src", "ui5.yaml"));
-          rimraf.sync(path.join(baseDir, "build", "src", "package.json"));
+          rimrafSync(path.join(baseDir, "build", "src", ".card"));
+          rimrafSync(path.join(baseDir, "build", "src", ".wst"));
+          rimrafSync(path.join(baseDir, "build", "src", "ui5.yaml"));
+          rimrafSync(path.join(baseDir, "build", "src", "package.json"));
         
         } else {
           // Find out /Top/__contents/card-sample/build/src/manifest.json

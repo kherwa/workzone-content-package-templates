@@ -3,6 +3,7 @@ const fs = require("fs-extra"),
   { spawnSync } = require("child_process"),
   glob = require("glob");
 const { cwd } = require("process");
+const archiver = require("archiver");
 
 var util = {
   spawn: {
@@ -29,10 +30,9 @@ var util = {
   },
   zip: {
     folder: async function (targetfile, sourcefolder, folder = "*") {
-      const { ZipArchive } = await import("archiver");
       return new Promise((resolve, reject) => {
         const output = fs.createWriteStream(targetfile);
-        const archive = new ZipArchive({
+        const archive = archiver("zip", {
           zlib: { level: 9 }, // Sets the compression level.
         });
         output.on("close", () => {
